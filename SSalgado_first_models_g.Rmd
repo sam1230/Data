@@ -1,0 +1,63 @@
+---
+title: "SSalgado_first_models_g"
+author: "Samantha Salgado"
+date: "6/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+library(jpeg)
+library(grid)
+
+```
+```{r}
+ds9 <- readJPEG("wedding.jpg")
+blue <- ds9[,,3]
+```
+
+```{r}
+m <- prcomp(blue, scale. = T)
+grid.raster(ds9)
+```
+
+```{r}
+
+```
+
+```{r}
+pca_approx <- function(data, pca_loadings, d){
+  pca_loadings <- pca_loadings[, 1:d]
+  out <- (data %*% pca_loadings) %*% t(pca_loadings)
+}
+```
+
+
+```{r}
+
+blueout <- pca_approx(blue, m$rotation, 5)
+```
+
+
+
+
+```{r}
+blueout <- (blueout - min(blueout)) / max(blueout - min(blueout))
+```
+
+```{r}
+grid.raster(as.raster(blueout))
+
+```
+```{r}
+blueout <- pca_approx(blue, m$rotation, 600)
+blueout <- (blueout - min(blueout)) / max(blueout - min(blueout))
+grid.raster(as.raster(blueout))
+```
+
+

@@ -1,0 +1,41 @@
+---
+title: "SSalgado_string_manipulation_d"
+author: "Samantha Salgado"
+date: "5/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+library(tidyverse)
+```
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+#Q1 and Q2 Q3
+#Q2 
+#Q3
+```{r}
+beauty <- read_csv("https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/beauty.csv") %>% 
+  mutate(line = str_replace_all(line, ";+", " "),
+        person = tolower(person))
+head(beauty)
+```
+
+#Q4
+```{r}
+group_by(beauty, person) %>%
+  summarize(lines = str_c(line, collapse = " ")) %>%
+  mutate(lines = tolower(lines))
+```
+
+
+
+
+```
+

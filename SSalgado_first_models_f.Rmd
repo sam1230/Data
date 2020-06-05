@@ -1,0 +1,45 @@
+---
+title: "SSalgado_first_model_f"
+author: "Samantha Salgado"
+date: "6/1/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+bb <- read_csv("https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/nba-teams-2017.csv") %>%
+  select(-games_played, -minutes)
+tail(bb)
+
+
+```
+
+#### PCA
+```{r}
+bb <- select(bb, -team)
+m <- prcomp(bb, scale. = TRUE)
+```
+
+
+### Rotations Scores vector
+```{r}
+plot(m$rotation[, 2], m$rotation[, 3], col = "peru", main = "PC 2 and 3 Loadings", xlab = "PC2", ylab = "PC 3")
+```
+
+#### Loadings
+
+```{r}
+plot(m$x[, 2], m$x[, 3], col = "plum", main = "PC 2 and 3 Scores", xlab = "PC2", ylab = "PC 3")
+```
+
+###### Writing
+The scores plot is a lot more clustered than the loadings plot. The plots do not say much though, as we need to map clusters with names. Loadings is so spread out there is not be much to see there. 
+
+
+
+

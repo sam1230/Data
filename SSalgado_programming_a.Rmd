@@ -1,0 +1,29 @@
+---
+title: "SSalgado_Programming_a"
+author: "Samantha Salgado"
+date: "6/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Q1
+
+```{r}
+teams = list(c(1,2), c(3,4), c(5,6))
+teams
+```
+
+# Q2
+```{r}
+wins <- vector(mode = "list", length = length(teams))
+
+for (j in 1:length(teams)){
+  wins[[j]] = sample(teams[[j]], size = 1)
+}
+wins
+```
+

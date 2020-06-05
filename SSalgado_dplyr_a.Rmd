@@ -1,0 +1,50 @@
+---
+title: "tutorial_dplyr_a"
+author: "Samantha Salgado"
+date: "5/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Q1
+
+```{r}
+library('tidyverse')
+```
+
+#Q2
+
+```{r}
+tibble(x = sample(letters, 10), y= paste(x, "!", sep = ""))
+
+```
+
+
+# Rest of Qs 
+#Q1/2
+```{r}
+df <- starwars[, c("name", "height", "mass", "species")]
+df
+```
+
+# Q3 create new column 
+```{r}
+df$mph <- df$mass / df$height
+df
+```
+
+#Q 4 convert
+```{r}
+df$height <- df$height * 0.393701
+```
+
+#Q5 reporting statistics
+```{r}
+mean(df$height, na.rm = TRUE)
+max(df$height, na.rm = TRUE)
+median(df$height, na.rm = TRUE)
+```
+

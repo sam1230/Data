@@ -1,0 +1,48 @@
+---
+title: "SSalgado_sampling_a"
+author: "Samantha Salgado"
+date: "5/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+#part one
+```{r}
+set.seed(1305)
+```
+
+```{r}
+x <- runif(10000, min = -1, max = 1)
+y <- runif(10000, min = -1, max = 1)
+z <- runif(10000, min = -1, max = 1)
+```
+
+```{r}
+plot(x,y)
+```
+```{r}
+set.seed(1305)
+x <- runif(10000, min = -1, max = 1)
+set.seed(1305)
+y <- runif(10000, min = -1, max = 1)
+
+```
+```{r}
+plot(x,y)
+```
+
+#Part two Q,1,2,3
+```{r}
+p <- (x^2 + y^2 + z^2) < 1
+(sum(p)/length(p))*8
+```
+#Q4
+#True value is 4.18879
+

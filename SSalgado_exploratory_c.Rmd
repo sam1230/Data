@@ -1,0 +1,76 @@
+---
+title: "SSalgado_exploratory_c"
+author: "Samantha Salgado"
+date: "5/19/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+```
+
+
+
+```{r}
+dp <- read_csv('https://github.com/firstlookmedia/the-condemned-data/raw/master/the-condemed-data.csv')
+```
+
+
+#part 1
+
+```{r}
+dp <- mutate(dp, 
+             Status = tolower(Status),
+             Status = case_when(Status == "executed" ~ "exec", 
+                                    Status == "not currently on death row" ~ "ndr",
+                                    Status == "on death row" ~ "dr")) %>%
+  select(-currently_on_death_row, -executed) %>%
+  mutate(volunteer_execution = ifelse(!is.na(volunteer_execution), "v_exec", NA),
+         died = ifelse(!is.na(died), "died", NA),
+         suicide = ifelse(!is.na(suicide), "sui", NA),
+         commuted = ifelse(!is.na(commuted), "com", NA),
+         exonerated = ifelse(!is.na(exonerated), "exon", NA),
+         resentenced = ifelse(!is.na(resentenced), "resen", NA),
+         released = ifelse(!is.na(released), "rel", NA)) %>%
+  unite("outcome", volunteer_execution, died,
+        suicide, commuted, exonerated, resentenced, released, na.rm = TRUE, remove = TRUE) %>%
+  select(-DOB, -current_sentence, -sentencing_date)
+```
+#Q1 
+
+#Q2
+
+```{r}
+ggplot(dp, aes(x = Status)) + geom_bar() + 
+  ggtitle(label = "Death row cases by Status")
+```
+#Q4 Description
+#this plot tells me that the majority of people are not on death row anymore, with the second majority being on deathrow. The least amount is the people who have been executed. 
+
+
+#Q3
+```{r}
+group_by(dp, outcome) %>%
+  filter(n() > 50) %>%
+  ggplot(aes(x = Status, fill = outcome)) + geom_bar() + theme(axis.text.x = element_text(angle = 45))
+```
+#Q4
+#Description
+
+#this plot gives more information and shows if people are not on death row, a count of why they were removed. It also shows number of people that were on death row or executed and what happened to them. 
+
+
+
+#part 2
+```{r}
+count(dp, gender, sentencing_year) %>%
+  ggplot(aes(x = sentencing_year, y = n, color = gender)) + geom_line() + theme_bw() + scale_color_brewer(type = "div", palette = "Set1") + ggtitle("Deathsentences by year and gender") + xlab("Year of sentencing") + ylab("Number of cases")
+```
+#part 2
+#as you can see from the plot, females are red and have a relatively low line, with death sentences hardly ever fluctuating. Most death sentenses are for men, in the blue.
+

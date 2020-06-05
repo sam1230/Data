@@ -1,0 +1,76 @@
+---
+title: "SSalgado_dplyr_c"
+author: "Samantha Salgado"
+date: "5/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+#Q1
+
+```{r}
+df <- read_csv('http://www.dsi.uminho.pt/~pcortez/forestfires/forestfires.csv')
+
+df
+```
+```{r}
+str(df)
+```
+#Q2
+```{r}
+
+df <- mutate(df, temp = temp * (9/5) + 32,
+             wind = wind * 0.621371,
+             area = area * 2.47105) 
+
+```
+```{r}
+str(df)
+```
+
+
+
+#Q3
+
+```{r}
+cold_days <- filter(df, temp <= 50, wind >= 3)
+
+str(cold_days)
+```
+
+#part two Q1
+```{r}
+cold_days <- mutate(cold_days, chill =  35.754 + .6215 * temp + (wind^.16) * (.4275 * temp - 35.75))
+cold_days
+```
+
+#Q2
+```{r}
+group_by(cold_days, month) %>% summarize(n = n()) 
+
+
+```
+
+#Q3
+```{r}
+select(cold_days, month, temp, chill, area) %>% group_by(month) %>%
+  summarize_all(.funs = list(mean = mean, max = max))
+
+```
+
+
+
+
+
+
+
+
+

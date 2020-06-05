@@ -1,0 +1,43 @@
+---
+title: "SSalgado_programming_b"
+author: "Samantha Salgado"
+date: "6/4/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+# Question 1 
+```{r}
+d <- data.frame(team_one = 1:8, team_two = 9:16)
+
+```
+# Q 2
+```{r}
+ apply(d, 1, sample, size = 1)
+```
+
+# Q 3
+```{r}
+d
+```
+
+
+# Part two
+
+# Q 1 and Q2
+```{r}
+win = apply(d, 1, sample, size = 1)
+win
+```
+# Q3 and Q4
+```{r}
+matrix(win, ncol=2, byrow=T)
+```
+

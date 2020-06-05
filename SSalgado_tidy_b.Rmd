@@ -1,0 +1,67 @@
+---
+title: "SSalgado_tidy_b"
+author: "Samantha Salgado"
+date: "5/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+```
+
+#q1
+```{r}
+artists <- read_csv("https://github.com/MuseumofModernArt/collection/blob/master/Artists.csv?raw=true")
+
+head(artists)
+```
+
+
+#Q2
+```{r}
+art <- read_csv("https://github.com/MuseumofModernArt/collection/blob/master/Artworks.csv?raw=true") %>% 
+  separate(ConstituentID, 
+           into = c("firstID", "secondID"), sep = ",",
+           convert = TRUE)
+```
+
+```{r}
+head(art)
+```
+
+#Q3 and 4 
+#ConstituentID is the primary key, because as you can see below, there are no duplicate values of ConstituentID, since the number of rows is equal to number of distinct ConstituentIDs
+```{r}
+nrow(artists) - n_distinct(artists$ConstituentID)
+```
+
+
+#Part 2
+#Q1
+```{r}
+inner_join(art, artists, by = c("firstID" = "ConstituentID")) %>% nrow
+```
+
+#Q2
+```{r}
+inner_join(art, artists, by = c("secondID" = "ConstituentID")) %>% nrow
+```
+#Q3
+```{r}
+left_join(art, artists, by = c("secondID" = "ConstituentID")) %>% str
+```
+
+#Q4
+```{r}
+left_join(art, artists, by = c("firstID" = "ConstituentID")) %>%
+  count(Nationality.y) %>%
+  select(Nationality = Nationality.y, n) %>%
+  arrange(desc(n)) %>% 
+  head(n = 5)
+```
+

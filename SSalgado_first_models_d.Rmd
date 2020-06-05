@@ -1,0 +1,70 @@
+---
+title: "SSalgado_first_models_d"
+author: "Samantha Salgado"
+date: "5/31/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+library(tidyverse)
+library(proxy)
+bison <- read_csv('https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/smallbison.csv') %>%
+  distinct %>% 
+  mutate(latitude = pi*latitude/180, longitude = pi*longitude/180,
+                dtime = scale(dtime)[,1])
+dim(bison)
+```
+
+```{r}
+d <- function(x, y){
+  haversine(x[1], y[1], x[2], y[2]) + abs(x[3]-y[3])
+}
+```
+
+```{r}
+haversine <- function(lat1, lat2, long1, long2){
+  # function written for transparency in matching with haversine formula
+  # coordinates must be in radians
+  h <- sin(.5 * (lat2 - lat1)) ^ 2 + cos(lat1) * cos(lat2) * (sin(.5 * (long2 - long1)) ^ 2)
+  # earth diameter taken from http://imagine.gsfc.nasa.gov/features/cosmic/earth_info.html
+  # in miles
+  r <- (12756 / 2) * 0.621371
+  return(2 * r * asin(sqrt(h)))
+}
+```
+
+
+
+```{r}
+
+Dmat <- proxy::dist(bison, method = "manhattan")
+```
+
+```{r}
+library(cluster)
+K <- 4
+set.seed(1305)
+m <- pam(Dmat, k = K, diss = TRUE)
+bison <- mutate(bison, cluster = factor(m$cluster))
+group_by(bison, cluster) %>% 
+  summarise(n = n(), latitude = mean(latitude),
+            longitude = mean(longitude),
+            dtime = mean(dtime))
+```
+
+
+
+```{r}
+
+bison <- mutate(bison, latitude = 180*latitude/pi,  longitude = 180*longitude/pi)
+ggplot(bison, aes(x = latitude, y = longitude, color = cluster)) + geom_point(size = 3, alpha = .7) +
+  theme_bw() + scale_color_brewer(type = "qual", palette = "Set1")
+```
+
+
+

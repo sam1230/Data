@@ -1,0 +1,62 @@
+---
+title: "SSalgado_tidy_a"
+author: "Samantha Salgado"
+date: "5/19/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+```
+
+#Q1
+```{r}
+art <- read_csv("https://github.com/MuseumofModernArt/collection/blob/master/Artworks.csv?raw=true")
+str(art)
+```
+#Q2
+```{r}
+art <- separate(art, ConstituentID, into = c("firstID", "secondID", sep = ",",
+                                             convert = TRUE))
+select(art, firstID, secondID)
+```
+
+#Q3
+```{r}
+select(art, firstID, secondID, ObjectID, Title) %>% slice(110:115)
+```
+
+#part 2
+#one observation per objectID: This one checks out and is good!
+```{r}
+nrow(art) - n_distinct(art$ObjectID)
+```
+
+#This filters out any duplicates
+```{r}
+art2 <- filter(art, firstID == secondID) %>% nrow
+
+```
+
+#this gives an NA to any duplicate artists. 
+```{r}
+art1 <- mutate(art, secondID = ifelse(firstID==secondID, NA, secondID))
+```
+#the data set is also has large names for the museums. Maybe acronyms could help? 
+#would the data tables really need all the information it provides? maybe can be split up into smaller data tables that can call on each other.
+
+
+#the above gives a data frame with a comma as a column, and below will remove the NA columns of secondID and the comma column
+```{r}
+art <-filter(art, firstID != NA)
+head(art)
+
+drop <- c("secondID", ",")
+
+```
+

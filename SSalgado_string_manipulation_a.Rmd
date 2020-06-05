@@ -1,0 +1,59 @@
+---
+title: "SSalgado_string_manipulation_a"
+author: "Samantha Salgado"
+date: "5/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+#q1
+```{r}
+beauty <- read_lines('http://www.fpx.de/fp/Disney/Scripts/BeautyAndTheBeast.txt', 
+           skip = 6)
+head(beauty)
+```
+#q2          
+```{r}
+grep("old woman", beauty, value = TRUE)
+```
+ 
+#q3          
+   
+```{r}
+grep("but", beauty, ignore.case = TRUE, value = TRUE) %>% head
+```
+      
+#part 2  
+```{r}
+beauty <- read_csv("https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/beauty.csv")
+head(beauty)
+```
+
+
+```{r}
+str_count(beauty$line, "Gaston") %>% head
+```
+
+```{r}
+tolower(beauty$line) %>%
+  str_count("gaston") %>%
+  sum
+```
+     
+           
+```{r}
+mutate(beauty, line = tolower(line)) %>%
+  group_by(person) %>%
+  summarize(gaston = str_count(line, "gaston") %>% sum) %>%
+  filter(gaston > 0) %>%
+  arrange(desc(gaston))
+```
+     
+     

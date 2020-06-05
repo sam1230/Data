@@ -1,0 +1,58 @@
+---
+title: "tutorial_dplyr_b"
+author: "Samantha Salgado"
+date: "5/14/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+#part one Q1
+```{r}
+df <- read_csv('http://www.dsi.uminho.pt/~pcortez/forestfires/forestfires.csv')
+```
+
+```{r}
+str(df)
+```
+
+#q2
+```{r}
+nrow(df)
+ncol(df)
+```
+
+
+#Q3
+
+```{r}
+df <- select(df, X, Y, month, day, temp, rain, area)
+str(df)
+
+```
+#4 the source is the date and times of forest fires, along with weather conditions during the day, and the area it spread to.
+
+
+#Part 2 Q1
+```{r}
+nrow(filter(df, temp >= 30, rain <= 0.2, area >= 10))
+```
+
+#Q2
+
+
+```{r}
+unique(df$day)
+```
+
+
+```{r}
+filter(df, day %in% c("mon", "tue", "wed", "thu", "fri"))
+```
+

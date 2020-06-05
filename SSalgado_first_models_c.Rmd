@@ -1,0 +1,55 @@
+---
+title: "SSalgado_first_models_c"
+author: "Samantha Salgado"
+date: "5/31/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Part one 
+```{r}
+library(tidyverse)
+bison <- read_csv('https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/smallbison.csv')
+
+K <- 6
+
+set.seed(1305)
+m <- kmeans(data.matrix(bison), centers = K)
+bison <- mutate(bison, cluster = factor(m$cluster))
+```
+```{r}
+cent <- as_tibble(m$centers) %>% mutate(cluster = factor(1:K))
+ggplot(bison, aes(x = latitude, y = longitude, color = cluster)) + geom_point(size = 3, alpha = .7) +
+  theme_bw() + scale_color_brewer(type = "qual", palette = "Set1") +
+  geom_point(data = cent, size = 10, shape = 13)
+```
+
+```{r}
+library(plotly) # https://plot.ly/r/getting-started/
+plot_ly(data = bison, type = "scatter3d", mode = "markers", opacity = .5,
+        x = ~latitude, y = ~longitude, z = ~dtime, color = ~cluster)
+```
+
+# Part 2
+```{r}
+
+bison <- read_csv('https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/smallbison.csv')
+
+K <- 4
+
+set.seed(1305)
+
+bison_s = data.matrix(bison) %>% scale
+m <- kmeans(bison_s, centers = K)
+bison <- as.tibble(bison_s) %>% mutate(cluster = factor(m$cluster))
+```
+```{r}
+cent <- as_tibble(m$centers) %>% mutate(cluster = factor(1:K))
+ggplot(bison, aes(x = latitude, y = longitude, color = cluster)) + geom_point(size = 3, alpha = .7) +
+  theme_bw() + scale_color_brewer(type = "qual", palette = "Set1") +
+  geom_point(data = cent, size = 10, shape = 13)
+```
+

@@ -1,0 +1,34 @@
+---
+title: "SSalgado_string_manipulation_c"
+author: "Samantha Salgado"
+date: "5/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(tidyverse)
+```
+
+#Q1
+
+```{r}
+beauty <- read_csv("https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/beauty.csv")
+```
+
+#Q2
+```{r}
+narrator <- beauty$line[1]
+narrator
+```
+#Q3
+```{r}
+narrator <- str_replace_all(narrator, ";+", " ")
+```
+#Q4
+```{r}
+str_split(narrator, boundary("sentence"))
+```
+

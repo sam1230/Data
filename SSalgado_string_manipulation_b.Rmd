@@ -1,0 +1,52 @@
+---
+title: "SSalgado_string_manipulation_b"
+author: "Samantha Salgado"
+date: "5/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+#Q1
+
+```{r}
+beauty <- read_csv("https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/beauty.csv")
+head(beauty)
+```
+
+```{r}
+"[A-z][!?]"
+```
+
+#Q2
+```{r}
+grepl("[A-z][!?]", c("yippee", "YIPEE!", "Yipee?", "?", "yipe6!"))
+```
+
+#Q3
+
+```{r}
+length(grepl("[A-z][!?]", beauty))
+```
+
+#Part 2
+#Q1
+```{r}
+length(grep("Gaston[[:alpha:][:space:],':]*!", beauty, value = T))
+```
+#Q2
+```{r}
+group_by(beauty, person) %>%
+  summarize(exclaim = str_count(line, "Gaston[[:alpha:][:space:],':]*!") %>% sum) %>%
+  filter(exclaim > 0)
+```
+```{r}
+filter(beauty, grepl("Gaston[[:alpha:][:space:],':]*!", line))
+```
+

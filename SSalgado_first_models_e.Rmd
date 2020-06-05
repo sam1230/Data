@@ -1,0 +1,38 @@
+---
+title: "SSalgado_first_models_e"
+author: "Samantha Salgado"
+date: "6/1/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+bb <- read_csv("https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/nba-teams-2017.csv") %>%
+  select(-games_played, -minutes)
+head(bb, n = 3)
+```
+
+
+
+```{r}
+
+bb <- select(bb, -team)
+m <- prcomp(bb, scale. = TRUE)
+```
+
+```{r}
+head(m$rotation[, 1], n = 8)
+```
+
+
+```{r}
+plot(m$rotation[, 1], m$rotation[, 2], col = "peru")
+```
+
+
+#### Question 4
+The importance of the wins and losses is that they have large effects on PC1. Free throws and rebounds dont have much affect. Another important large effect variable is win_prop and points.  

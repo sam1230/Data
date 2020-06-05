@@ -1,0 +1,70 @@
+---
+title: "SSalgado_tidy_c"
+author: "Samantha Salgado"
+date: "5/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(tidyverse)
+```
+
+##Q1 and 2
+
+```{r}
+debt <- read_csv("https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/d3.csv")
+str(debt)
+
+colnames(debt) <- c("date", "domestic_nonfinancial_total", "household_total", "household_mortgage", 
+                    "household_credit", "business_total", "business_corporate",
+                    "federal", "state_and_local", "financial", "foreign")
+
+debt <- mutate_all(debt, ~ ifelse(. == "ND", NA, .)) %>%
+  mutate_at(vars(-date), as.numeric)
+
+debt <- pivot_longer(debt, -date, names_to = "sector", values_to = "billions")
+
+
+
+```
+
+#Q3 and 4
+```{r}
+
+growth <- read_csv("https://raw.githubusercontent.com/brendanrbrown/brendanrbrown.github.io/master/d1.csv")
+
+colnames(growth) <- c("date", "domestic_nonfinancial_total", "household_total", "household_mortgage", 
+                    "household_credit", "business_total", "business_corporate",
+                    "federal", "state_and_local", "financial", "foreign")
+
+growth <- mutate_all(growth, ~ ifelse(. == "ND", NA, .)) %>%
+  mutate_at(vars(-date), as.numeric)
+
+growth <- pivot_longer(growth, -date, names_to = "sector", values_to = "billions")
+
+str(growth)
+```
+
+#part 2
+#Q1
+Variables making up the key: date and sector
+#q2
+```{r}
+df <- left_join(growth, debt, by = c("date", "sector")) %>% 
+  rename(growth = billions.x, level = billions.y)
+
+str(df)
+```
+#Q3
+```{r}
+df <- separate(df, date, into = c("year", "quarter"), sep = ":", convert = T)
+
+str(df)
+```
+

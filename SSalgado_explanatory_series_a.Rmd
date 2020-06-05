@@ -1,0 +1,49 @@
+---
+title: "SSalgado_exploratory_series_a"
+author: "Samantha Salgado"
+date: "5/17/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+dp <- read_csv('https://github.com/firstlookmedia/the-condemned-data/raw/master/the-condemed-data.csv')
+```
+
+#Q2
+```{r}
+
+dp <- mutate(dp, Status = tolower(Status),
+             Status = case_when(Status == "executed" ~ "exec", 
+                                Status == "not currently on death row" ~ "ndr",
+                                Status == "on death row" ~ "dr"))
+
+```
+
+#q3
+```{r}
+dp <- select(dp, -currently_on_death_row, -executed)
+
+```
+
+#part 2
+```{r}
+dp <- mutate(dp, 
+             volunteer_execution = ifelse(!is.na(volunteer_execution), "v_exec", NA),
+             died = ifelse(!is.na(died), "died", NA),
+             suicide = ifelse(!is.na(suicide), "sui", NA),
+             commuted = ifelse(!is.na(commuted), "com", NA),
+             exonerated = ifelse(!is.na(exonerated), "exon", NA),
+             resentenced = ifelse(!is.na(resentenced), "resen", NA),
+             released = ifelse(!is.na(released), "rel", NA)) %>%
+  unite("outcome", volunteer_execution, died, suicide, commuted, exonerated, resentenced, released, na.rm = TRUE, remove = TRUE)
+select(dp, Status, outcome) %>% tail(n=3)
+```
+

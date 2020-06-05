@@ -1,0 +1,25 @@
+---
+title: "SSalgado_models_b"
+author: "Samantha Salgado"
+date: "5/31/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### Question 1
+
+**Inference because you would be determinig the relationship between the generic traits and breast cancer. If it was a prediction, you would be asking how likely are certain traits to cause breast cancer**
+
+### Question 2
+**Supervised, because you would have to label each individual species and their lineages.**
+
+
+### Part 2
+
+**Classification would be useful when you are deciding whether something is a panda or is not a panda. You could give a model pictures of pandas with label of panda, and pictures of random objects labeled not a panda. Your model can then learn from those pictures and label new pictures accordingly.**
+
+**Regression might be useful when trying to predict the price of houses in a certain area based on previous data. You could take prices, squarefoot, and number of bathrooms in an area. You can then use that to create a linear regression model to predict housing prices given squarefoot and number of bathrooms for a new house.**

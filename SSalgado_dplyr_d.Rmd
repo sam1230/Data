@@ -1,0 +1,48 @@
+---
+title: "SSalgado_dplyr_d"
+author: "Samantha Salgado"
+date: "5/15/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+#Q1
+
+```{r}
+df <- read_csv('http://www.dsi.uminho.pt/~pcortez/forestfires/forestfires.csv')
+
+df
+```
+
+
+
+#Q2
+```{r}
+group_by(df, month) %>%
+  summarize(tot_area = sum(area)) %>%
+  arrange(desc(tot_area)) %>%
+  select(month, tot_area)
+```
+
+#Q3
+```{r}
+df <- group_by(df, month) %>%
+  mutate(prop_area = area / sum(area)) 
+```
+
+#part 2
+
+```{r}
+filter(df, rank(desc(prop_area)) == 1) %>%
+  select(prop_area, area, month, rain, wind, temp)
+```
+
+

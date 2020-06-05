@@ -1,0 +1,67 @@
+---
+title: "SSalgado_exploratory_b"
+author: "Samantha Salgado"
+date: "5/19/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+#Q1
+```{r}
+dp <- read_csv('https://github.com/firstlookmedia/the-condemned-data/raw/master/the-condemed-data.csv')
+```
+
+
+#Q2 and Q3
+
+```{r}
+dp <- mutate(dp, 
+             Status = tolower(Status),
+             Status = case_when(Status == "executed" ~ "exec", 
+                                    Status == "not currently on death row" ~ "ndr",
+                                    Status == "on death row" ~ "dr")) %>%
+  select(-currently_on_death_row, -executed) %>%
+  mutate(volunteer_execution = ifelse(!is.na(volunteer_execution), "v_exec", NA),
+         died = ifelse(!is.na(died), "died", NA),
+         suicide = ifelse(!is.na(suicide), "sui", NA),
+         commuted = ifelse(!is.na(commuted), "com", NA),
+         exonerated = ifelse(!is.na(exonerated), "exon", NA),
+         resentenced = ifelse(!is.na(resentenced), "resen", NA),
+         released = ifelse(!is.na(released), "rel", NA)) %>%
+  unite("outcome", volunteer_execution, died,
+        suicide, commuted, exonerated, resentenced, released, na.rm = TRUE, remove = TRUE) %>%
+  select(-DOB, -current_sentence, -sentencing_date)
+```
+
+
+#Part 2
+#Q1 and 2
+```{r}
+ggplot(dp, aes(x = outcome)) + geom_bar() + 
+  ggtitle(label = "Count by outcome")
+```
+
+
+
+#Q 3 and 4
+#the labels are very close together, would have to refactor to be more readable. Most of the out comes are blank, so taking them out would be useful and to be more readable. 
+#The plot shows a high number of a few labels, but not much information since the labels a pushed together. 
+
+
+
+```{r}
+filter(dp, gender == "Male") %>%
+  count(sentencing_year) %>%
+  ggplot(aes(x = sentencing_year, y = n)) + geom_line() +
+  ggtitle("Death sentences for gender == Male, by year ")
+```
+
+#this plot shows the number of male sentences to death row by each year

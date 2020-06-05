@@ -1,0 +1,276 @@
+Universities are typically opaque, bureaucratic institutions. Many public schools such as the University of North Carolina system make [data about university employees publically](http://www.newsobserver.com/news/databases/public-salaries/) available. Using this dataset what can we learn about the university?
+
+
+## Instructions
+
+- Submit responses to Sakai
+- **Submit only the html output from your markdown response.** Files that do not *knit* will **not be considered valid.**
+
+If there is a knitting error, and you can't identify the source after substantial effort, change the `eval` option in the problematic chunk to `FALSE` so that you can at least turn in the rest of the assignment. 
+
+Done like so
+```
+{r, eval = FALSE}
+
+```
+
+**But you will not get any credit for that particular response.** All responses must display the output and code requested in order to receive credit.
+
+In addition,
+
+- use the `tidyverse` and `dplyr` functions to answer the following questions
+- submit just the .Rmd file to Sakai
+- pay careful attention to the questions
+- **return** something means just print it out. Similarly for questions **What is ...** just print out the answer
+
+Example
+
+Q: What is the sum of the first 10 positive integers?
+```{r}
+sum(1:10)
+```
+
+- **create** or **save** means save a variable
+
+Create a variable `x` with the sum of the first 10 positive integers.
+```{r}
+x <- sum(1:10)
+```
+
+
+
+# The data
+
+```{r}
+library(tidyverse)
+```
+
+
+First download the data set from Ryan Thornburg's website (it is also on stor390's github repo). You may want to set `cache=TRUE` for this chunk so you don't have to download the data set every time you run the script.
+```{r setup, message=FALSE, cache=FALSE}
+data <- read_csv("http://ryanthornburg.com/wp-content/uploads/2015/05/UNC_Salares_NandO_2015-05-06.csv")
+```
+
+Take a first look at the data
+```{r}
+str(data)
+head(data)
+```
+
+## Tips
+
+- Read through the `dplyr` lecture slides to date.
+
+- `fte` means full time employee
+
+
+# Assignment
+
+## Question 0
+The data come from the same source as this [N\&O database](https://www.newsobserver.com/news/databases/public-salaries/article11863496.html), but captured in May 2015.
+
+Based on the information in the link above and on inspection of the dataset using `head`, `str` etc., briefly answer the following questions. If you do not have clear evidence for an answer, say so and justify a guess. If you know nothing at all from the resources above, say 'I don't know'.
+
+You need only use the resources above to answer these questions.
+
+**Q:** Who generates the data in this dataset?
+
+**A:** cloud database by Caspio
+
+**Q:** Does the dataset include employee pay from *all* sources?
+
+**A:** no, employee could have pay from overtime or a summer job
+
+**Q:** Does the `totalsal` variable give salary actually paid to the employee in a given year?
+
+**A:** No, doesnt include bonus, overtime, annual leave, or summer pay
+
+**Q:** What does the `employed` variable represent?
+
+**A:** Doesnt say anywhere, but I would guess years employed.
+
+## Question 1
+Return a data frame with columns: name, dept, age,totalsal 
+```{r}
+#
+df1 <- select(data, name,dept,age,totalsal)
+head(df1)
+```
+
+Return a data frame with columns: statesal, nonstsal,totalsal using one of the `select_helpers` functions
+```{r}
+df2 <- select(data, ends_with("sal"))
+head(df2)
+```
+
+## Question 2 
+Rename the `fte` column to `fulltime`. Make sure this change is saved (i.e. `data <- ...`).
+```{r}
+
+data <- rename(data, fulltime=fte)
+head(data)
+```
+
+## Question 3 
+
+What is the mean salary in the Neurosurgery department?
+
+```{r}
+
+df5 <- filter(data, dept == 'Neurosurgery')
+x <- select(df5, totalsal) 
+print(mean(x$totalsal))
+
+```
+
+
+Return a data frame with employee's in the Neurosurgery department making more than $500,000.  
+```{r}
+
+df6 <- filter(data, dept == 'Neurosurgery', totalsal >= 500000)
+head(df6)
+```
+
+
+**Q:** Why might these professors be so well paid?
+
+**A:** They have to deal with brain surgery, a specific medical field that requires years of traning. 
+
+## Question 4 
+What is the total amount that full time Dermatology employees get paid?
+
+
+
+```{r}
+df7 <- filter(data, dept == 'Dermatology', fulltime == 1) 
+
+sum(df7$totalsal, na.rm = TRUE) 
+```
+
+
+## Question 5
+
+Create a data frame called radio_dept whose rows are the employees from the Radiology department. 
+
+- include only the following columns: name, position, age, nonstsal, totalsal. 
+- order the employees by salary
+
+Use pipes `%>%` to make your code readable.
+
+```{r }
+df9 <- filter(data, dept == 'Radiology') 
+radio_dept <-  select(df9, name, position, age, nonstsal, totalsal) %>% arrange(desc(totalsal))
+head(radio_dept)
+```
+
+
+## Question 6
+
+Create a data frame called `dept_summary`  whose rows are the departments and  whose columns are: department size, mean department salary, median department salary, and maximum salary (using totalsal for salary). 
+
+```{r }
+
+dept_summary1 <- select(data, name, position, age, nonstsal, totalsal, dept)
+dept_summary <- group_by(dept_summary1, dept) %>% summarize(department_size = n(), mean_department_salary = mean(totalsal), median_department_salary = median(totalsal), maximum_salary = max(totalsal))
+dept_summary
+```
+
+Order the departments by highest mean salary and print the 10 highest paid departments. 
+
+
+```{r }
+dept_summary2 <- arrange(dept_summary, desc(mean_department_salary)) 
+head(dept_summary2,10)
+```
+
+Order the departments by highest median salary and print the 10 highest paid departments. 
+
+```{r }
+dept_summary3 <- arrange(dept_summary, desc(median_department_salary)) 
+head(dept_summary3,10)
+```
+
+**Q:** Why do these lists differ? If you were asked for the top 10 best paid departments at UNC which summary would you choose and why?
+
+**A:** Departments like the Office of the Chancellor would be skewed because someone like the chancellor would make a lot more than the other people that work there like his secretary maybe. I would choose median because that shows a more accurate description of what most people are making, and cuts out the skewness of one person making a lot more, like a department lead or head of surgery. With lower department sizes, the median and average can also be skewed like with just one person working in Carolina Counts, or a few people in University Ombuds Office. 
+
+## Question 7
+How many departments have at least 10 employees?
+```{r }
+nrow(filter(dept_summary, department_size >= 10))
+
+```
+
+
+## Question 8
+Which department hired the most people in 2010? Hint: you probably have to modify `hiredate`.
+```{r }
+
+
+salary11 <- filter(data, hiredate >= 20100000, hiredate <= 20110000)
+
+
+
+dept_summary <- group_by(salary11, dept) %>% summarize(department_size = n(), mean_department_salary = mean(totalsal), median_department_salary = median(totalsal), maximum_salary = max(totalsal)  )
+dept_summary
+x <- max(dept_summary$department_size, na.rm = TRUE)
+
+x1 <- filter(dept_summary, department_size == x)
+print(x1$dept)
+
+
+```
+
+
+
+
+## Question 9
+Make a new data frame called `dept_big` that includes only departments with at least 20 employees, and save it as a new object (i.e. `dept_big <- ...`)
+```{r }
+
+
+dept1 <- select(data, name, position, age, nonstsal, totalsal, dept)
+dept_big1 <- group_by(dept1, dept)   %>%  summarize(department_size = n()) 
+dept_one <-  filter(dept_big1, department_size >= 20) 
+
+
+dept_big <- data %>% filter(dept %in% dept_one$dept)
+head(dept_big)
+```
+
+
+## Question 10
+Repeat the analysis of Q 6 but with `dept_big` instead of the original dataset, and using `dept_summary_big` instead of `dept_summary`. Answer all questions of Q 6 but for `dept_summary_big`, including the short-answer response.
+
+
+```{r}
+dept_summary1big <- select(data, name, position, age, nonstsal, totalsal, dept)
+dept_summary1 <- group_by(dept_summary1big, dept) %>% summarize(department_size = n(), mean_department_salary = mean(totalsal), median_department_salary = median(totalsal), maximum_salary = max(totalsal))
+dept_summary_big <- filter(dept_summary1, department_size >= 20) 
+
+
+
+
+```
+Order the departments by highest mean salary and print the 10 highest paid departments. 
+
+
+```{r }
+dept_summaryBig1 <- arrange(dept_summary_big, desc(mean_department_salary)) 
+head(dept_summaryBig1,10)
+```
+
+
+Order the departments by highest mean salary and print the 10 highest paid departments. 
+
+
+```{r }
+dept_summaryBig2 <- arrange(dept_summary_big, desc(median_department_salary)) 
+head(dept_summaryBig2,10)
+```
+
+
+**Q:** Why do these lists differ? If you were asked for the top 10 best paid departments at UNC which summary would you choose and why?
+
+**A:** I think they differ because of a lot of the reasons in number six, as in the departments would have a skewness due to one person making a lot more money. It cuts out the possibility of not getting an accurate depiction of a lot of people working in that department. So in number six, one person worked in one department and made a lot of money, but that doesnt mean if someone where to come in they would make that much too, since the one person is like the head of that department. I think I would still go with the average on these sets because, since we are getting rid of the skewness of only having a few people in one department, we can see that the average is going to depict a good representation of what the majority of people in that department are getting paid. 
+
